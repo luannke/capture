@@ -2,8 +2,7 @@
 
 import random
 
-from .comm.crawler import CrawlerBase, GSearch
-from .comm.registry import plug, func
+from .comm import CrawlerBase, GSearch, plug, func
 
 
 # from core.config import cfg
@@ -14,7 +13,7 @@ class Javdb(CrawlerBase, GSearch):
     _url = ["https://javdb.com", "https://javdb4.com", "https://javdb6.com"]
 
     def __init__(self, number, config):
-        super().__init__(number, config)
+        super().__init__(config)
 
         self.base_url = random.choice(self._url)
 

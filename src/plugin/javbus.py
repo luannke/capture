@@ -2,8 +2,7 @@
 import random
 import re
 
-from .comm.crawler import CrawlerBase
-from .comm.registry import plug, func
+from .comm import CrawlerBase, plug, func
 
 
 @plug
@@ -15,7 +14,7 @@ class Javbus(CrawlerBase):
     ]
 
     def __init__(self, number, config):
-        super().__init__(number, config)
+        super().__init__(config)
         base_url = random.choice(self._url)
         self.html = self.get_parser_html(base_url + number)
         # check self.html pass to registry, to decide whether to continue running the following functions

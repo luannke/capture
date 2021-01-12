@@ -128,9 +128,8 @@ class RequestHandler:
 
 class CrawlerBase(RequestHandler):
 
-    def __init__(self, number, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.number = number
         self._data = Metadata()
 
     @property
@@ -205,7 +204,7 @@ class CrawlerBase(RequestHandler):
 
             with open(file_name, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
-            logger.info(f"sucessfully download: {file_name}")
+            logger.info(f"successfully download: {file_name}")
         logger.info(f"fail download: {file_name}")
 
     def download_all(self, img_url: dict, folder):

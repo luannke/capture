@@ -58,12 +58,10 @@ def folder_utils(search_path: Path, data, config) -> Path:
     # If the number of actors is more than 5, take the first two
     if len(data.actor) >= 5:
         data.actor = data.actor[:2]
-    # replace data and create success folder
     target_path = search_path.joinpath(config.success_folder)
     folder_rule = replace_date(data, config.name_rule_folder)
     # split location rule by '/'
     level_names = folder_rule.split("/")
-    # first level folder
     folder = mkdir(target_path.joinpath(level_names[0]))
     # continuously create folders
     for level in level_names[1:]:
