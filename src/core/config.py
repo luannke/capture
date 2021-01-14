@@ -20,6 +20,7 @@ class Comm:
 
     def __post_init__(self):
         self.priority = ["javbus"]
+        self.cookie["javdb"] = ""
 
 
 @dataclass

@@ -89,6 +89,7 @@ def load_argument():
         parser.p, str), "input must single file-id or single folder"
     # split means pointing number
     obj = re.split(r"->", parser.p)
+    assert len(obj) < 3
     config = Config()
     cfg = config.default_config()
     if len(obj) == 2:

@@ -131,6 +131,8 @@ class CrawlerBase(RequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._data = Metadata()
+        self.args = args
+        self.kwargs = kwargs
 
     @property
     def data(self):
@@ -170,6 +172,15 @@ class CrawlerBase(RequestHandler):
                     return element.xpath(url_xpath, first=True)
 
     def get_outline(self, number):
+        outline = self._jav321_outline(number)
+        if outline is not None:
+            return outline
+        else:
+            outline = self._dmm_outline(number)
+            if outline is not None:
+                return outline
+
+    def _jav321_outline(self, number):
         # jav321
         res = self.post("https://www.jav321.com/search", data={"sn": number})
         if res is not None:
@@ -181,9 +192,11 @@ class CrawlerBase(RequestHandler):
             if outline is not None:
                 return outline
 
+    def _dmm_outline(self, number):
         # dmm
-        g = GSearch()
+        g = GSearch(*self.args, **self.kwargs)
         dmm_link = g.search(number, "dmm.co.jp")
+        res = None
         if dmm_link is not None:
             res = self.get_parser_html(dmm_link)
         else:
@@ -195,7 +208,6 @@ class CrawlerBase(RequestHandler):
             )
             if outline is not None:
                 return outline
-        return ""
 
     def download(self, url, file_name):
         r = self.get(url, stream=True)
@@ -221,15 +233,14 @@ class GSearch(RequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         cookie = Path(__file__).parent.parent.joinpath(".google-cookie")
+        self.cookie_jar = LWPCookieJar(str(cookie))
         if cookie.exists():
-            self.cookie_jar = LWPCookieJar(str(cookie))
             # noinspection PyBroadException
             try:
                 self.cookie_jar.load(ignore_discard=True, ignore_expires=True)
             except Exception:
                 pass
         else:
-            self.cookie_jar = None
             self.get_page("https://www.google.com/")
 
     def get_page(self, url):
@@ -237,13 +248,7 @@ class GSearch(RequestHandler):
         load cookie, if not ,get page and save
 
         """
-        response = self.session.get(
-            url,
-            timeout=self.timeout,
-            proxies=self.proxy_strategy,
-            cookies=self.cookie_jar,
-        )
-        response.encoding = "utf-8"
+        response = self.get(url=url, cookies=self.cookie_jar)
         html = response.text
         # noinspection PyBroadException
         try:

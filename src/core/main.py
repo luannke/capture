@@ -20,10 +20,8 @@ def main():
     target = dict(zip(argument[1], argument[2]))
     for file, number in target.items():
         data = get_metadata(file=file, number=number, cfg=cfg)
-        print(data)
         if not data:
-            move(src=file, dest=failed)
-            return
+            return move(src=file, dest=failed)
         created_folder = folder_utils(argument[0], data, cfg.resource)
 
         new_file_path = file_utils(created_folder, file, data, cfg.resource)

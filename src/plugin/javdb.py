@@ -16,10 +16,10 @@ class Javdb(CrawlerBase, GSearch):
         super().__init__(config)
 
         self.base_url = random.choice(self._url)
+        self.number = number
 
-        # cfg = set_config()
         headers = {
-            # "Cookie": cfg.request.cookie.get["javdb"],
+            "Cookie": config.comm.cookie.get["javdb"],
             "referer": self.base_url,
         }
         url = self.search(self.number, self.base_url.replace("https://", ""))
